@@ -18,7 +18,9 @@ The approval page should help a non-technical user decide quickly. It is not a l
 
 The style guide is not just visual advice. The templates and schema are the canonical implementation for public/new-user output.
 
-For an existing local user who already has a mature approval UI, the public template must not overwrite or simplify the local approved UI. Preserve the local visual baseline first, especially the `app-shell`, `windowbar`, `sidebar`, `card`, and `date-card` structure used by the established Mac approval workbench.
+For this project, the canonical source is local first. Update the local Skill and local approval workbench first; then show the changed page to the user for human approval, get full approval, and trial-run it on a real review day. Only after that may the public/open-source package template be synchronized from the approved local version. The public package follows the approved local Skill; it must not become the source that overwrites, simplifies, or weakens the local mature approval UI.
+
+Preserve the local visual baseline first, especially the `app-shell`, `windowbar`, `sidebar`, `card`, `date-card`, and `inspector` structure used by the established Mac approval workbench.
 
 ## Recommended Layout
 
@@ -96,6 +98,7 @@ Before reporting completion, perform 输出后自检:
 - `01_单日审批台_YYYY-MM-DD.html` exists.
 - Both pages use the shared CSS and JS, or inline an equivalent copy from those assets.
 - Existing local workbenches still use the approved mature shell (`app-shell/windowbar/sidebar/card/date-card`), not a newly invented simplified shell.
+- Public/open-source templates were synchronized only after the local Skill and local approval page passed human approval and a real trial run.
 - The single-day page includes `太棒了` in the overview.
 - Every approval card has every primary action from `schemas/approval-actions.json`.
 - Every approval card has additional action controls, digital asset action controls, and a note field.

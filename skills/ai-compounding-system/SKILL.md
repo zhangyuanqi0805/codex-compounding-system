@@ -59,6 +59,8 @@ When creating approval pages, do not design a fresh page from scratch.
 
 The templates are part of the Skill behavior, not optional examples. If local output paths differ, copy the same layout and action controls.
 
+For template evolution, the local Skill and local approval workbench are the source of truth. Update and trial-run the local version first, show it to the user for complete approval, then sync the approved local version into the public/open-source package. Never use a public starter template to overwrite, simplify, or weaken an established local approval UI.
+
 ## Core Workflow
 
 1. **Resolve one date.** Convert "today", "yesterday", or a written date into an explicit local date window using the configured timezone.

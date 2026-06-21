@@ -58,6 +58,8 @@ expectAllIncludes("skills/ai-compounding-system/SKILL.md", [
   "templates/00_全局审批台.template.html",
   "templates/01_单日审批台.template.html",
   "schemas/approval-actions.json",
+  "local approval workbench are the source of truth",
+  "public/open-source package",
   "太棒了",
   "全局复利与踩坑日志",
   "高档优先",
@@ -76,6 +78,9 @@ expectAllIncludes("skills/ai-compounding-system/references/onboarding-guide.md",
 expectAllIncludes("skills/ai-compounding-system/references/approval-ui-style-guide.md", [
   "必须优先复制模板",
   "不允许从零生成另一套审批台",
+  "canonical source is local first",
+  "human approval",
+  "trial-run",
   "每张卡必须提供完整主动作列表",
   "输出后自检",
 ]);
@@ -99,11 +104,18 @@ expectAllIncludes("skills/ai-compounding-system/templates/01_单日审批台.tem
 ]);
 
 expectAllIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", [
-  "wrap",
-  "date-card",
-  "每日复盘自动审批入口",
+  "app-shell",
+  "windowbar",
+  "sidebar",
+  "inspector",
+  "total-date-card",
+  "总审批台",
+  "审批规则",
+  "主动作单选",
+  "备注需复制审批结果",
 ]);
 
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "wrap");
 expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "acs-shell");
 expectNotIncludes("skills/ai-compounding-system/templates/01_单日审批台.template.html", "acs-shell");
 expectNotIncludes("skills/ai-compounding-system/assets/approval-workbench-mac.css", ".acs-shell");
