@@ -82,6 +82,8 @@ expectAllIncludes("skills/ai-compounding-system/references/approval-ui-style-gui
   "human approval",
   "trial-run",
   "approved compact total-desk layout",
+  "approval state must be derived from durable result files",
+  "Do not downgrade a date to `待审批`, `无主审卡`, or `仅回看`",
   "每张卡必须提供完整主动作列表",
   "输出后自检",
 ]);

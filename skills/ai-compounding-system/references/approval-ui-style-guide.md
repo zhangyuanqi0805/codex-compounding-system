@@ -24,6 +24,14 @@ Preserve the local visual baseline first, especially the `app-shell`, `windowbar
 
 For the global approval desk, match the approved compact total-desk layout: after the window bar, the main column starts directly with date cards. Do not add a center hero block, top search pill, extra explanatory inspector cards, or `内部稿` links to the total-desk date rows unless the user explicitly asks to redesign that page.
 
+For the global approval desk, approval state must be derived from durable result files before any visual regeneration:
+
+- If `审批结果*.json` exists for a date, show that date as `已审批` and expose the `审批结果` link.
+- If `审批执行账本*.md` exists, expose it as `账本`.
+- Do not downgrade a date to `待审批`, `无主审卡`, or `仅回看` just because the current card count is zero or the approval page is being regenerated.
+- Do not overwrite or recompute historical approval status from a public starter template.
+- When restoring or refactoring the global desk, verify at least one known approved date still shows `已审批`, `审批结果`, and `账本` before reporting completion.
+
 ## Recommended Layout
 
 - Light desktop background that works in macOS Chrome, Windows Chrome, Edge, and the Codex in-app browser.

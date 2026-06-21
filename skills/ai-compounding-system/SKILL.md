@@ -187,3 +187,4 @@ Drafts that may be reused later should include a bottom section named `Evidence 
 - Using technical-format labels for approval return controls instead of a clear `复制审批结果` button with fallback instructions.
 - Using Mac-only CSS assumptions that make the approval page look broken in Windows Chrome.
 - Treating the action list as a suggestion instead of a fixed schema. This causes other Codex instances to render only one or two buttons and makes the same Skill feel inconsistent across computers.
+- Regenerating the global approval desk and downgrading dates that already have `审批结果*.json` to `待审批`, `无主审卡`, or `仅回看`.
