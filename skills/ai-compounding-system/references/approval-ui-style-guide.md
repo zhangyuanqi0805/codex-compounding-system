@@ -18,6 +18,8 @@ The approval page should help a non-technical user decide quickly. It is not a l
 
 The style guide is not just visual advice. The templates and schema are the canonical implementation for public/new-user output.
 
+For an existing local user who already has a mature approval UI, the public template must not overwrite or simplify the local approved UI. Preserve the local visual baseline first, especially the `app-shell`, `windowbar`, `sidebar`, `card`, and `date-card` structure used by the established Mac approval workbench.
+
 ## Recommended Layout
 
 - Light desktop background that works in macOS Chrome, Windows Chrome, Edge, and the Codex in-app browser.
@@ -93,6 +95,7 @@ Before reporting completion, perform 输出后自检:
 - `00_全局审批台.html` exists.
 - `01_单日审批台_YYYY-MM-DD.html` exists.
 - Both pages use the shared CSS and JS, or inline an equivalent copy from those assets.
+- Existing local workbenches still use the approved mature shell (`app-shell/windowbar/sidebar/card/date-card`), not a newly invented simplified shell.
 - The single-day page includes `太棒了` in the overview.
 - Every approval card has every primary action from `schemas/approval-actions.json`.
 - Every approval card has additional action controls, digital asset action controls, and a note field.
@@ -119,6 +122,7 @@ Do not leave the user on a blank textarea with no instruction.
 - Redesigning the approval page every run.
 - Removing action choices just to make the page shorter.
 - Treating `schemas/approval-actions.json` as optional.
+- Replacing an established local approval UI with a simpler public starter template.
 - Showing technical-format labels as the obvious way to return approvals.
 - Reporting English artifact filenames as the main completion entry for Chinese users.
 - Generating only a single-day page without a global approval desk.

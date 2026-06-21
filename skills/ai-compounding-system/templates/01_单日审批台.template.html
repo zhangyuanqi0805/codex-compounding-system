@@ -3,121 +3,155 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{REVIEW_DATE}} 单日审批台</title>
+  <title>{{REVIEW_DATE}} 单日复盘审批台</title>
   <link rel="stylesheet" href="../assets/approval-workbench-mac.css">
 </head>
 <body data-approval-version="v2-public-fixed-action-schema">
-  <div class="acs-shell">
-    <div class="acs-window">
-      <header class="acs-titlebar">
-        <div class="acs-lights" aria-hidden="true">
-          <span class="acs-light red"></span>
-          <span class="acs-light yellow"></span>
-          <span class="acs-light green"></span>
-        </div>
-        <div class="acs-search">搜索标题、结论、动作</div>
-        <button class="acs-button primary" type="button" onclick="acsCopyApprovalResult({date: '{{REVIEW_DATE}}'})">复制审批结果</button>
-      </header>
-      <div class="acs-main">
-        <aside class="acs-sidebar">
-          <h2>单日审批</h2>
-          <p><strong>{{REVIEW_DATE}}</strong></p>
-          <p class="acs-muted">看完卡片后，点“复制审批结果”，回到 Codex 粘贴发给我。</p>
-          <button class="acs-button primary" type="button" onclick="acsCopyApprovalResult({date: '{{REVIEW_DATE}}'})">复制审批结果</button>
-        </aside>
-        <main class="acs-content">
-          <section class="acs-hero">
-            <p class="acs-eyebrow">AI 复利系统</p>
-            <h1>{{REVIEW_DATE}} 单日审批台</h1>
-            <p class="acs-muted">太棒了，今天你和 Codex/Code Desk 完成了 {{WORKLINE_COUNT}} 条工作线，我整理成 {{CARD_COUNT}} 张审批卡。主要包括：{{CARD_TOPICS}}。你只需要逐张判断下一步要不要推进。</p>
-          </section>
-          <section class="acs-summary-grid">
-            <div class="acs-stat"><strong>{{CARD_COUNT}}</strong><span>审批卡</span></div>
-            <div class="acs-stat"><strong>{{HIGH_RISK_COUNT}}</strong><span>高风险</span></div>
-            <div class="acs-stat"><strong>{{PENDING_COUNT}}</strong><span>待定</span></div>
-            <div class="acs-stat"><strong>{{AVG_PASS_RATE}}</strong><span>默认通过率预估</span></div>
-          </section>
-          <div class="acs-note">写初稿类卡片的后续动作固定为“在 Codex 工作台生成初稿让你审核”。是否进入数字资产库单独审批，不和写稿动作混在一起。</div>
-          {{APPROVAL_CARDS}}
-          <section class="acs-card">
-            <h2>导出结果</h2>
-            <p class="acs-muted">点“复制审批结果”，然后回到 Codex 粘贴发给我。</p>
-            <p data-acs-copy-status class="acs-muted"></p>
-            <textarea data-acs-output class="acs-output" aria-label="审批结果"></textarea>
-          </section>
-        </main>
-        <aside class="acs-inspector">
-          <div class="acs-side-card">
-            <h3>完整动作规则</h3>
-            <p>每张卡都必须保留完整主动作列表、附加动作和数字资产动作。默认推荐可以不同，但可选项不能缩水。</p>
-          </div>
-          <div class="acs-side-card">
-            <h3>处理边界</h3>
-            <p>没有回传审批结果前，不写规则、不做 Skill、不复制进数字资产库、不发布。</p>
-          </div>
-        </aside>
+  <div class="app-shell">
+    <div class="windowbar">
+      <div class="dots" aria-label="窗口按钮">
+        <i style="background:#ff5f57"></i>
+        <i style="background:#febc2e"></i>
+        <i style="background:#28c840"></i>
       </div>
+      <input id="search" class="search" type="search" placeholder="搜索标题、证据、动作">
+      <button class="btn" type="button" id="copyJsonTop">复制审批结果</button>
+    </div>
+    <div class="app-body">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">单日审批</h2>
+        <button type="button" class="side-item active" data-status="全部">全部 <span>{{CARD_COUNT}}</span></button>
+        <button type="button" class="side-item" data-status="高风险">高风险 <span>{{HIGH_RISK_COUNT}}</span></button>
+        <button type="button" class="side-item" data-status="待定">待定 <span>{{PENDING_COUNT}}</span></button>
+        <select class="filter" id="actionFilter" aria-label="按动作筛选">
+          <option value="全部动作">全部动作</option>
+          <option value="写全局规则">写全局规则</option>
+          <option value="写项目规则">写项目规则</option>
+          <option value="写复利日志">写复利日志</option>
+          <option value="直接做 Skill">直接做 Skill</option>
+          <option value="主题摘要通过-写初稿">主题摘要通过-写初稿</option>
+          <option value="初稿通过-写拓展稿">初稿通过-写拓展稿</option>
+          <option value="再改主题摘要">再改主题摘要</option>
+          <option value="待定-看备注">待定-看备注</option>
+          <option value="丢弃">丢弃</option>
+        </select>
+        <div class="side-actions">
+          <button class="btn primary" type="button" id="copyJson">复制审批结果</button>
+          <button class="btn" type="button" id="downloadJson">下载审批结果备份</button>
+          <button class="btn" type="button" id="importJsonBtn">导入旧结果合并</button>
+          <button class="btn" type="button" id="resetAll">恢复默认</button>
+          <input id="importFile" type="file" accept=".json,application/json" class="hidden">
+        </div>
+        <div class="side-note">本页自动保存到本机浏览器。刷新同一路径不会丢；如果补漏后换了页面，可以导入旧审批结果按稳定卡片 ID 合并。</div>
+      </aside>
+      <main class="content">
+        <section class="hero">
+          <div>
+            <h1>{{REVIEW_DATE}} 单日复盘审批台</h1>
+            <p>太棒了，今天你和 Codex/Code Desk 完成了 {{WORKLINE_COUNT}} 条工作线，我整理成 {{CARD_COUNT}} 张审批卡。主要包括：{{CARD_TOPICS}}。你只需要逐张判断下一步要不要推进。</p>
+          </div>
+          <span class="badge pass">平均通过率预估 {{AVG_PASS_RATE}}</span>
+        </section>
+        <section class="metrics" aria-label="摘要">
+          <div class="metric"><strong>{{CARD_COUNT}}</strong><span class="muted">审批候选卡</span></div>
+          <div class="metric"><strong>{{WORKLINE_COUNT}}</strong><span class="muted">工作线</span></div>
+          <div class="metric"><strong>{{DEFAULT_DROP_COUNT}}</strong><span class="muted">默认不推进</span></div>
+          <div class="metric"><strong>{{AVG_PASS_RATE}}</strong><span class="muted">默认通过率预估</span></div>
+        </section>
+        <section class="notice">写初稿类卡片的后续动作固定为“在 Codex 工作台生成初稿让你审核”。是否进入数字资产库单独审批，不和写稿动作混在一起。</section>
+        <section class="cards" id="cards" aria-label="审批卡片">
+          {{APPROVAL_CARDS}}
+          <article class="card" data-acs-card-id="{{CARD_ID}}" data-default-primary-action="{{DEFAULT_PRIMARY_ACTION}}" data-default-asset-action="{{DEFAULT_ASSET_ACTION}}">
+            <div class="card-head">
+              <div>
+                <h2 data-acs-title>{{CARD_TITLE}}</h2>
+                <div class="badges">
+                  <span class="badge default">默认：{{DEFAULT_PRIMARY_ACTION}}</span>
+                  <span class="badge pass">通过率预估 {{PASS_RATE}}</span>
+                  <span class="badge warn">风险：{{RISK_LEVEL}}</span>
+                  <span class="badge">{{CARD_TYPE}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="pass-box">
+              <div class="pass-row"><span>默认建议可信度</span><strong>{{PASS_RATE}}</strong></div>
+              <div class="pass-track"><div class="pass-fill" style="--w: {{PASS_RATE}}"></div></div>
+              <p class="muted small">{{PASS_RATE_REASON}}</p>
+            </div>
+            <div class="grid">
+              <div>
+                <div class="field"><h3>这是什么</h3><p>{{WHAT_IS_THIS}}</p></div>
+                <div class="field"><h3>当天结果</h3><p>{{DAY_RESULT}}</p></div>
+                <div class="field"><h3>为什么进卡</h3><p>{{WHY_CARD}}</p></div>
+                <div class="field"><h3>推荐下一步</h3><p>{{RECOMMENDED_NEXT_STEP}}</p></div>
+              </div>
+              <div>
+                <div class="field"><h3>已有资产查重</h3><p>{{EXISTING_ASSET_CONCLUSION}}</p></div>
+                <details class="field">
+                  <summary>证据、来源、隐私和目标位置</summary>
+                  <div>{{FOLDED_EVIDENCE}}</div>
+                </details>
+              </div>
+            </div>
+            <div class="field">
+              <h3>主动作（单选）</h3>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="写全局规则">写全局规则</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="写项目规则">写项目规则</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="写复利日志">写复利日志</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="直接做 Skill">直接做 Skill</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="主题摘要通过-写初稿">主题摘要通过-写初稿</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="初稿通过-写拓展稿">初稿通过-写拓展稿</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="再改主题摘要">再改主题摘要</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="待定-看备注">待定-看备注</label>
+                <label class="choice"><input type="radio" name="primary-{{CARD_ID}}" value="丢弃">丢弃</label>
+              </div>
+            </div>
+            <div class="field">
+              <h3>附加动作（可多选）</h3>
+              <div class="extras">
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="补截图候选">补截图候选</label>
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="二次查重">二次查重</label>
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="转项目线索">转项目线索</label>
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="标记教学案例">标记教学案例</label>
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="补证据索引">补证据索引</label>
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="追问用户">追问用户</label>
+                <label class="extra-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="生成初稿后追问是否继续成稿">生成初稿后追问是否继续成稿</label>
+              </div>
+            </div>
+            <div class="field">
+              <h3>数字资产动作（单选）</h3>
+              <div class="asset-choices">
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="不处理资产库">不处理资产库</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="建议入库_复制正本">建议入库_复制正本</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="暂留工作区">暂留工作区</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="待用户确认">待用户确认</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="禁止入库">禁止入库</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="不入库">不入库</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="初稿候选入库">初稿候选入库</label>
+                <label class="asset-choice"><input type="radio" name="asset-{{CARD_ID}}" value="另建素材包">另建素材包</label>
+              </div>
+            </div>
+            <div class="field">
+              <h3>备注</h3>
+              <textarea data-acs-note placeholder="如果不同意默认建议，在这里写你希望怎么处理。"></textarea>
+            </div>
+          </article>
+        </section>
+        <section class="export-panel">
+          <h2>导出结果</h2>
+          <p class="muted small">审批完后，点“复制审批结果”，然后回到 Codex 粘贴发给我。备注在本地浏览器里，不导出我就读不到。</p>
+          <p id="copyStatus" class="muted small"></p>
+          <textarea id="exportText" data-acs-output spellcheck="false" placeholder="点击复制或下载前会自动生成审批结果。"></textarea>
+        </section>
+      </main>
+      <aside class="inspector">
+        <h2>处理状态</h2>
+        <div class="inspector-card"><strong>完整动作区</strong><p>主动作只能选一个；附加动作可多选；数字资产动作单独判断。</p></div>
+        <div class="inspector-card"><strong>执行边界</strong><p>本页只是审批材料。必须复制审批结果发回 Codex 后，才会执行被审批的动作。</p></div>
+      </aside>
     </div>
   </div>
-  <template id="acs-card-template">
-    <article class="acs-card" data-acs-card-id="{{CARD_ID}}" data-default-primary-action="{{DEFAULT_PRIMARY_ACTION}}" data-default-asset-action="{{DEFAULT_ASSET_ACTION}}">
-      <h2 data-acs-title>{{CARD_TITLE}}</h2>
-      <div class="acs-badges">
-        <span class="acs-badge default">默认：{{DEFAULT_PRIMARY_ACTION}}</span>
-        <span class="acs-badge confidence">通过率预估 {{PASS_RATE}}</span>
-        <span class="acs-badge risk">风险：{{RISK_LEVEL}}</span>
-        <span class="acs-badge">{{CARD_TYPE}}</span>
-      </div>
-      <div class="acs-decision">
-        <div><strong>这是什么：</strong>{{WHAT_IS_THIS}}</div>
-        <div><strong>当天结果：</strong>{{DAY_RESULT}}</div>
-        <div><strong>为什么进卡：</strong>{{WHY_CARD}}</div>
-        <div><strong>推荐下一步：</strong>{{RECOMMENDED_NEXT_STEP}}</div>
-      </div>
-      <div class="acs-conclusion"><strong>已有资产查重：</strong>{{EXISTING_ASSET_CONCLUSION}}</div>
-      <details>
-        <summary>证据、来源、隐私和目标位置</summary>
-        <div>{{FOLDED_EVIDENCE}}</div>
-      </details>
-      <section class="acs-action-group">
-        <h3>主动作（单选）</h3>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="写全局规则">写全局规则</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="写项目规则">写项目规则</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="写复利日志">写复利日志</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="直接做 Skill">直接做 Skill</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="主题摘要通过-写初稿">主题摘要通过-写初稿</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="初稿通过-写拓展稿">初稿通过-写拓展稿</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="再改主题摘要">再改主题摘要</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="待定-看备注">待定-看备注</label>
-        <label class="acs-choice"><input type="radio" name="primary-{{CARD_ID}}" value="丢弃">丢弃</label>
-      </section>
-      <section class="acs-action-group">
-        <h3>附加动作（可多选）</h3>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="补截图候选">补截图候选</label>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="二次查重">二次查重</label>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="转项目线索">转项目线索</label>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="标记教学案例">标记教学案例</label>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="补证据索引">补证据索引</label>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="追问用户">追问用户</label>
-        <label class="acs-choice"><input type="checkbox" name="additional-{{CARD_ID}}" value="生成初稿后追问是否继续成稿">生成初稿后追问是否继续成稿</label>
-      </section>
-      <section class="acs-action-group">
-        <h3>数字资产动作（单选）</h3>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="不处理资产库">不处理资产库</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="建议入库_复制正本">建议入库_复制正本</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="暂留工作区">暂留工作区</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="待用户确认">待用户确认</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="禁止入库">禁止入库</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="不入库">不入库</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="初稿候选入库">初稿候选入库</label>
-        <label class="acs-choice"><input type="radio" name="asset-{{CARD_ID}}" value="另建素材包">另建素材包</label>
-      </section>
-      <label class="acs-action-group">
-        <h3>备注</h3>
-        <textarea data-acs-note class="acs-note-input" placeholder="如果不同意默认建议，在这里写你希望怎么处理。"></textarea>
-      </label>
-    </article>
-  </template>
   <script src="../assets/approval-workbench.js"></script>
 </body>
 </html>

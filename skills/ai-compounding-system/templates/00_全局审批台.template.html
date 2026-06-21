@@ -6,59 +6,25 @@
   <title>{{SYSTEM_NAME}} - 全局审批台</title>
   <link rel="stylesheet" href="assets/approval-workbench-mac.css">
 </head>
-<body data-approval-version="v2-public-fixed-action-schema">
-  <div class="acs-shell">
-    <div class="acs-window">
-      <header class="acs-titlebar">
-        <div class="acs-lights" aria-hidden="true">
-          <span class="acs-light red"></span>
-          <span class="acs-light yellow"></span>
-          <span class="acs-light green"></span>
-        </div>
-        <div class="acs-search">搜索日期、主题、状态</div>
-        <button class="acs-button primary" type="button" onclick="acsCopyApprovalResult()">复制审批结果</button>
-      </header>
-      <div class="acs-main">
-        <aside class="acs-sidebar">
-          <h2>全局入口</h2>
-          <p class="acs-muted">推荐先从这里进入每天的单日审批台。</p>
-          <button class="acs-button primary" type="button" onclick="acsCopyApprovalResult()">复制审批结果</button>
-        </aside>
-        <main class="acs-content">
-          <section class="acs-hero">
-            <p class="acs-eyebrow">{{SYSTEM_NAME}}</p>
-            <h1>全局审批台</h1>
-            <p class="acs-muted">这里按日期汇总每天的复盘结果。最新日期在前，你可以逐日进入单日审批台。</p>
-          </section>
-          <section class="acs-summary-grid">
-            <div class="acs-stat"><strong>{{TOTAL_DAYS}}</strong><span>已生成日期</span></div>
-            <div class="acs-stat"><strong>{{PENDING_DAYS}}</strong><span>待审批</span></div>
-            <div class="acs-stat"><strong>{{APPROVED_DAYS}}</strong><span>已回传</span></div>
-            <div class="acs-stat"><strong>{{TOTAL_CARDS}}</strong><span>审批卡</span></div>
-          </section>
-          <section>
-            {{DATE_ROWS}}
-          </section>
-          <section class="acs-card">
-            <h2>导出结果</h2>
-            <p class="acs-muted">点“复制审批结果”，然后回到 Codex 粘贴发给我。</p>
-            <p data-acs-copy-status class="acs-muted"></p>
-            <textarea data-acs-output class="acs-output" aria-label="审批结果"></textarea>
-          </section>
-        </main>
-        <aside class="acs-inspector">
-          <div class="acs-side-card">
-            <h3>处理边界</h3>
-            <p>审批结果不会自动执行。复制并发回 Codex 后，AI 才能按你批准的动作继续。</p>
-          </div>
-          <div class="acs-side-card">
-            <h3>推荐顺序</h3>
-            <p>先看全局入口，再进入单日审批台，最后复制审批结果。</p>
-          </div>
-        </aside>
+<body>
+  <div class="wrap">
+    <h1>每日复盘自动审批入口</h1>
+    <p class="sub">最新日期在前。审批结果不会自动执行，必须复制审批结果发回 Codex 后再处理。</p>
+    {{DATE_ROWS}}
+    <article class="date-card">
+      <div>
+        <h2>{{REVIEW_DATE}}</h2>
+        <p>{{DATE_SUMMARY}}</p>
       </div>
-    </div>
+      <div class="links">
+        <a href="{{SINGLE_DAY_APPROVAL_HREF}}">审批台</a>
+        <a href="{{APPROVAL_RESULT_HREF}}">审批结果</a>
+        <a href="{{INTERNAL_REVIEW_HREF}}">内部稿</a>
+        <a href="{{ASSET_SUGGESTION_HREF}}">入库建议</a>
+        <a href="{{DAY_FOLDER_HREF}}">文件夹</a>
+      </div>
+      <span>{{STATUS}}</span>
+    </article>
   </div>
-  <script src="assets/approval-workbench.js"></script>
 </body>
 </html>

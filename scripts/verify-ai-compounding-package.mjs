@@ -40,6 +40,14 @@ function expectAllIncludes(relativePath, texts) {
   }
 }
 
+function expectNotIncludes(relativePath, text) {
+  const content = fs.existsSync(file(relativePath)) ? read(relativePath) : "";
+  checks.push({
+    label: `${relativePath} does not include ${text}`,
+    ok: !content.includes(text),
+  });
+}
+
 expectFile("skills/ai-compounding-system/templates/00_全局审批台.template.html");
 expectFile("skills/ai-compounding-system/templates/01_单日审批台.template.html");
 expectFile("skills/ai-compounding-system/assets/approval-workbench-mac.css");
@@ -75,6 +83,10 @@ expectAllIncludes("skills/ai-compounding-system/references/approval-ui-style-gui
 expectAllIncludes("skills/ai-compounding-system/templates/01_单日审批台.template.html", [
   "太棒了",
   "复制审批结果",
+  "app-shell",
+  "windowbar",
+  "sidebar",
+  "card",
   "写全局规则",
   "写项目规则",
   "写复利日志",
@@ -85,6 +97,16 @@ expectAllIncludes("skills/ai-compounding-system/templates/01_单日审批台.tem
   "待定-看备注",
   "丢弃",
 ]);
+
+expectAllIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", [
+  "wrap",
+  "date-card",
+  "每日复盘自动审批入口",
+]);
+
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "acs-shell");
+expectNotIncludes("skills/ai-compounding-system/templates/01_单日审批台.template.html", "acs-shell");
+expectNotIncludes("skills/ai-compounding-system/assets/approval-workbench-mac.css", ".acs-shell");
 
 const failed = checks.filter((check) => !check.ok);
 if (failed.length) {

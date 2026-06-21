@@ -1,52 +1,25 @@
-const ACS_PRIMARY_ACTIONS = [
-  "写全局规则",
-  "写项目规则",
-  "写复利日志",
-  "直接做 Skill",
-  "主题摘要通过-写初稿",
-  "初稿通过-写拓展稿",
-  "再改主题摘要",
-  "待定-看备注",
-  "丢弃"
-];
+const TERMINAL_PRIMARY_ACTIONS = new Set(["待定-看备注", "丢弃"]);
 
-const ACS_ADDITIONAL_ACTIONS = [
-  "补截图候选",
-  "二次查重",
-  "转项目线索",
-  "标记教学案例",
-  "补证据索引",
-  "追问用户",
-  "生成初稿后追问是否继续成稿"
-];
+function cardId(card) {
+  return card.dataset.acsCardId || card.dataset.id || card.id || "";
+}
 
-const ACS_ASSET_ACTIONS = [
-  "不处理资产库",
-  "建议入库_复制正本",
-  "暂留工作区",
-  "待用户确认",
-  "禁止入库",
-  "不入库",
-  "初稿候选入库",
-  "另建素材包"
-];
-
-function acsCollectApprovalResult(meta = {}) {
-  const cards = [...document.querySelectorAll("[data-acs-card-id]")];
+function collectApprovalResult() {
+  const cards = [...document.querySelectorAll("[data-acs-card-id], .card[data-id]")];
   return {
-    approvalVersion: meta.approvalVersion || document.body.dataset.approvalVersion || "v2-public-fixed-action-schema",
+    approvalVersion: document.body.dataset.approvalVersion || "v2-public-fixed-action-schema",
     exportedAt: new Date().toISOString(),
     decisions: cards.map((card) => {
-      const id = card.dataset.acsCardId;
-      const primary = card.querySelector(`input[name="primary-${CSS.escape(id)}"]:checked`)?.value || "";
-      const asset = card.querySelector(`input[name="asset-${CSS.escape(id)}"]:checked`)?.value || "";
+      const id = cardId(card);
+      const primary = card.querySelector(`input[name="primary-${CSS.escape(id)}"]:checked`)?.value || card.dataset.defaultPrimaryAction || "";
+      const asset = card.querySelector(`input[name="asset-${CSS.escape(id)}"]:checked`)?.value || card.dataset.defaultAssetAction || "";
       const additional = [...card.querySelectorAll(`input[name="additional-${CSS.escape(id)}"]:checked`)].map((item) => item.value);
-      const note = card.querySelector("[data-acs-note]")?.value || "";
+      const note = card.querySelector("[data-acs-note], textarea[data-id]")?.value || "";
       return {
         id,
-        title: card.querySelector("[data-acs-title]")?.textContent?.trim() || "",
+        title: card.querySelector("[data-acs-title], h2")?.textContent?.trim() || "",
         primaryAction: primary,
-        additionalActions: additional,
+        additionalActions: TERMINAL_PRIMARY_ACTIONS.has(primary) ? [] : additional,
         digitalAssetAction: asset,
         note,
         changed: card.dataset.defaultPrimaryAction !== primary || card.dataset.defaultAssetAction !== asset || note.trim().length > 0
@@ -55,39 +28,53 @@ function acsCollectApprovalResult(meta = {}) {
   };
 }
 
-async function acsCopyApprovalResult(meta = {}) {
-  const output = document.querySelector("[data-acs-output]");
-  const status = document.querySelector("[data-acs-copy-status]");
-  const payload = JSON.stringify(acsCollectApprovalResult(meta), null, 2);
+function writePayloadToTextarea(payload) {
+  const output = document.querySelector("[data-acs-output], #exportText");
+  if (output) output.value = payload;
+  return output;
+}
 
-  if (output) {
-    output.value = payload;
-  }
+function setCopyStatus(text) {
+  const status = document.querySelector("[data-acs-copy-status], #copyStatus");
+  if (status) status.textContent = text;
+}
 
+async function copyApprovalResult() {
+  const payload = JSON.stringify(collectApprovalResult(), null, 2);
+  const output = writePayloadToTextarea(payload);
   try {
     await navigator.clipboard.writeText(payload);
-    if (status) status.textContent = "已复制，可以回到 Codex 粘贴。";
-    return;
+    setCopyStatus("已复制，可以回到 Codex 粘贴。");
   } catch (error) {
     if (output) {
       output.focus();
       output.select();
       try {
         document.execCommand("copy");
-        if (status) status.textContent = "已复制，可以回到 Codex 粘贴。";
-        return;
+        setCopyStatus("已复制，可以回到 Codex 粘贴。");
       } catch (fallbackError) {
-        if (status) status.textContent = "复制失败，请手动全选下面的审批结果，再粘贴回 Codex。";
+        setCopyStatus("复制失败，请手动全选下面的审批结果，再粘贴回 Codex。");
       }
     }
   }
 }
 
-function acsMarkSelectedChoices() {
+function downloadApprovalResult() {
+  const payload = JSON.stringify(collectApprovalResult(), null, 2);
+  writePayloadToTextarea(payload);
+  const blob = new Blob([payload], { type: "application/json;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `approval-result-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function markSelectedChoices() {
   document.querySelectorAll("input[type='radio'], input[type='checkbox']").forEach((input) => {
     const update = () => {
       document.querySelectorAll(`input[name="${CSS.escape(input.name)}"]`).forEach((item) => {
-        item.closest("label")?.classList.toggle("is-selected", item.checked);
+        item.closest("label")?.classList.toggle("selected", item.checked);
       });
     };
     input.addEventListener("change", update);
@@ -95,4 +82,18 @@ function acsMarkSelectedChoices() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", acsMarkSelectedChoices);
+function bindApprovalWorkbench() {
+  markSelectedChoices();
+  document.getElementById("copyJson")?.addEventListener("click", copyApprovalResult);
+  document.getElementById("copyJsonTop")?.addEventListener("click", copyApprovalResult);
+  document.getElementById("downloadJson")?.addEventListener("click", downloadApprovalResult);
+  document.getElementById("resetAll")?.addEventListener("click", () => {
+    document.querySelectorAll("textarea").forEach((textarea) => { textarea.value = ""; });
+    document.querySelectorAll("input[type='checkbox']").forEach((input) => { input.checked = false; });
+    markSelectedChoices();
+    writePayloadToTextarea("");
+    setCopyStatus("已恢复页面默认选择。");
+  });
+}
+
+document.addEventListener("DOMContentLoaded", bindApprovalWorkbench);
