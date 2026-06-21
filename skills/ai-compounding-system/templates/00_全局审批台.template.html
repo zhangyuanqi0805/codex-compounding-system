@@ -25,7 +25,6 @@
     <header class="windowbar">
       <div class="dots"><i class="red"></i><i class="yellow"></i><i class="green"></i></div>
       <strong>{{SYSTEM_NAME}} - 全局审批台</strong>
-      <div class="search">搜索日期、主题、状态</div>
     </header>
     <div class="app-body">
       <aside class="sidebar">
@@ -37,13 +36,6 @@
         <div class="metric"><strong>{{NO_CARD_DATE_COUNT}}</strong><span>无主审卡日期</span></div>
       </aside>
       <main class="content">
-        <section class="hero">
-          <div>
-            <h1>每日复盘总审批台</h1>
-            <p class="total-copy">这里是 AI 复利系统的主入口：每天的 Codex/Code Desk 工作先变成可审批卡片，审批结果不会自动执行，必须复制审批结果回 Codex 后再处理。</p>
-          </div>
-          <span class="badge pass">{{APPROVED_DATE_COUNT}} 天已回传</span>
-        </section>
         <section class="cards" aria-label="每日复盘日期列表">
           {{DATE_ROWS}}
           <article class="date-card total-date-card">
@@ -60,7 +52,6 @@
               <a class="primary-link" href="{{SINGLE_DAY_APPROVAL_HREF}}">审批台</a>
               <a href="{{APPROVAL_RESULT_HREF}}">审批结果</a>
               <a href="{{FINAL_REPORT_HREF}}">最终汇报</a>
-              <a href="{{INTERNAL_REVIEW_HREF}}">内部稿</a>
               <a href="{{ASSET_SUGGESTION_HREF}}">入库建议</a>
               <a href="{{EVIDENCE_INDEX_HREF}}">证据索引</a>
               <a href="{{LEDGER_HREF}}">账本</a>
@@ -80,14 +71,6 @@
             <span>不自动执行审批结果</span>
             <span>数字资产库单独审批</span>
           </div>
-        </div>
-        <div class="inspector-card">
-          <h3>本地成熟口径</h3>
-          <p>总审批台和单日审批台都必须沿用 Mac 工作台结构：左侧状态，中间卡片，右侧规则。</p>
-        </div>
-        <div class="inspector-card">
-          <h3>恢复来源</h3>
-          <p>公开包模板必须从本地审批通过并试跑后的成熟版本同步。</p>
         </div>
       </aside>
     </div>

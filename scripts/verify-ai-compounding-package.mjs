@@ -81,6 +81,7 @@ expectAllIncludes("skills/ai-compounding-system/references/approval-ui-style-gui
   "canonical source is local first",
   "human approval",
   "trial-run",
+  "approved compact total-desk layout",
   "每张卡必须提供完整主动作列表",
   "输出后自检",
 ]);
@@ -116,6 +117,12 @@ expectAllIncludes("skills/ai-compounding-system/templates/00_全局审批台.tem
 ]);
 
 expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "class=\"wrap\"");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "class=\"search\"");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "<section class=\"hero\"");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "{{INTERNAL_REVIEW_HREF}}");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", ">内部稿<");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "本地成熟口径");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "恢复来源");
 expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "acs-shell");
 expectNotIncludes("skills/ai-compounding-system/templates/01_单日审批台.template.html", "acs-shell");
 expectNotIncludes("skills/ai-compounding-system/assets/approval-workbench-mac.css", ".acs-shell");

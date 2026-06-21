@@ -22,6 +22,8 @@ For this project, the canonical source is local first. Update the local Skill an
 
 Preserve the local visual baseline first, especially the `app-shell`, `windowbar`, `sidebar`, `card`, `date-card`, and `inspector` structure used by the established Mac approval workbench.
 
+For the global approval desk, match the approved compact total-desk layout: after the window bar, the main column starts directly with date cards. Do not add a center hero block, top search pill, extra explanatory inspector cards, or `内部稿` links to the total-desk date rows unless the user explicitly asks to redesign that page.
+
 ## Recommended Layout
 
 - Light desktop background that works in macOS Chrome, Windows Chrome, Edge, and the Codex in-app browser.
