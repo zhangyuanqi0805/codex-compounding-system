@@ -60,6 +60,8 @@ expectAllIncludes("skills/ai-compounding-system/SKILL.md", [
   "schemas/approval-actions.json",
   "local approval workbench are the source of truth",
   "public/open-source package",
+  "Stability And Sync Gate",
+  "Claiming the Skill, templates, or public package are stable without running the stability and sync gate",
   "太棒了",
   "全局复利与踩坑日志",
   "高档优先",
@@ -73,6 +75,21 @@ expectAllIncludes("skills/ai-compounding-system/references/onboarding-guide.md",
   "忽略",
   "我可以建议在你的文档目录下新建一个 `数字资产库` 文件夹",
   "全局复利与踩坑日志",
+]);
+
+expectAllIncludes("skills/ai-compounding-system/references/approval-calibration-learning.md", [
+  "This is a template",
+  "Keep it local",
+  "Do not publish real approval data without permission",
+  "Common Difference Types",
+  "Do not turn one correction into a permanent rule too quickly",
+]);
+
+expectAllIncludes("skills/ai-compounding-system/references/writing-feedback-learning.md", [
+  "Keep it local",
+  "Default Writing Checks",
+  "Ask whether the user wants to continue from first draft to polished draft or public draft",
+  "Do not paste sensitive transcripts into this file",
 ]);
 
 expectAllIncludes("skills/ai-compounding-system/references/approval-ui-style-guide.md", [

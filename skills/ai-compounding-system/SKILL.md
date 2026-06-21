@@ -100,6 +100,18 @@ Final response rules:
 - Do not list English filenames as the main deliverables for Chinese users.
 - If an internal script or tool generated English filenames, create Chinese-named outputs or aliases before reporting completion.
 
+## Stability And Sync Gate
+
+Before saying the local Skill is stable, before syncing the public/open-source package, or after changing templates, CSS, JS, action schema, approval-result handling, or global desk rendering:
+
+1. Verify the local Skill and public package Skill have the same executable files, templates, assets, schemas, and core instructions after synchronization. The only allowed content differences are local-private learning files such as `references/approval-calibration-learning.md` and `references/writing-feedback-learning.md`; the public package versions of those files must remain sanitized templates.
+2. Run the public package verification script when available.
+3. Verify the three global desk entry files are identical: `00_单日复盘总审批台.html`, `00_全局审批台.html`, and `00_每日复盘自动审批入口.html`.
+4. Verify any date with `审批结果*.json` still displays `已审批`, `审批结果`, and `账本` in the global desk, and is not downgraded to `待审批`, `无主审卡`, or `仅回看`.
+5. Verify the total-desk desktop layout keeps date-row action links on one row unless the viewport is too narrow.
+6. Verify the single-day approval template still renders every primary action, additional action, and digital-asset action from `schemas/approval-actions.json`.
+7. If visual layout changed, open the page, take a screenshot, or use DOM/layout checks. Do not call it stable based only on code inspection.
+
 ## Approval Actions
 
 Primary action, single select:
@@ -188,3 +200,4 @@ Drafts that may be reused later should include a bottom section named `Evidence 
 - Using Mac-only CSS assumptions that make the approval page look broken in Windows Chrome.
 - Treating the action list as a suggestion instead of a fixed schema. This causes other Codex instances to render only one or two buttons and makes the same Skill feel inconsistent across computers.
 - Regenerating the global approval desk and downgrading dates that already have `审批结果*.json` to `待审批`, `无主审卡`, or `仅回看`.
+- Claiming the Skill, templates, or public package are stable without running the stability and sync gate.
