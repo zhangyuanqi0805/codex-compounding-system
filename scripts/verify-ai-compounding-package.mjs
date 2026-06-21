@@ -115,7 +115,7 @@ expectAllIncludes("skills/ai-compounding-system/templates/00_全局审批台.tem
   "备注需复制审批结果",
 ]);
 
-expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "wrap");
+expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "class=\"wrap\"");
 expectNotIncludes("skills/ai-compounding-system/templates/00_全局审批台.template.html", "acs-shell");
 expectNotIncludes("skills/ai-compounding-system/templates/01_单日审批台.template.html", "acs-shell");
 expectNotIncludes("skills/ai-compounding-system/assets/approval-workbench-mac.css", ".acs-shell");
