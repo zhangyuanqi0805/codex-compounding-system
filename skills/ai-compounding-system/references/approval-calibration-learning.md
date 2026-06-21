@@ -5,7 +5,7 @@ This is a template for the AI 复利系统 calibration file. Keep it local to th
 ## When to Read
 
 - Before assigning default actions in an approval workbench.
-- After receiving exported approval JSON or structured approval feedback.
+- After receiving copied approval results or structured approval feedback.
 - Before the next daily review, so repeated mistakes become less likely.
 
 ## What to Record
@@ -25,7 +25,7 @@ If the user accepted every default, record a short line saying which defaults we
 | Missing real outcomes | A completed or advanced goal was not shown | Add an achieved-goal audit before making cards |
 | Existing asset missed | A rule or Skill already exists | Search existing assets before defaulting to create |
 | Draft/asset boundary confused | Writing a draft was treated as asset-library approval | Keep writing, publishing, and asset copying separate |
-| Evidence overload | User must read paths/logs before understanding the card | Move evidence to folded details or JSON |
+| Evidence overload | User must read paths/logs before understanding the card | Move evidence to folded details or the backstage evidence payload |
 | Style mismatch | Draft does not match user's preferred writing style | Add or update a writing-feedback note |
 
 ## Upgrade Rule

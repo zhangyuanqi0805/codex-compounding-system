@@ -17,6 +17,7 @@ Use this before writing:
 
 - Start with the audience's concrete pain, not with a method name.
 - State the main judgment early.
+- For first-run setup or public sharing, explain the value and final result before showing prompts, paths, or technical configuration.
 - Show Before/After when possible.
 - Separate draft, polished draft, asset-library copy, and published version.
 - Keep a bottom evidence/material index for drafts that may be reused later.
