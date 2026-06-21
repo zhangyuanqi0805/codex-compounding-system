@@ -1,0 +1,1 @@
+请使用 skill-installer 从 https://github.com/zhangyuanqi0805/ai-compounding-system/tree/main/skills/ai-compounding-system 安装 AI 复利系统 Skill。安装完成后提醒我重启 Codex；重启后请启动 AI 复利系统的首次配置向导，逐个问题问我完成个性化设置，并先跑一个指定日期的小样。

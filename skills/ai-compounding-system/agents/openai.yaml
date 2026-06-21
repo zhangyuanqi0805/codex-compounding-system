@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI复利系统"
+  short_description: "把每天的 AI 协作复盘成审批台、规则候选、Skill 候选、文稿候选和数字资产建议，并用审批反馈持续校准"
+  default_prompt: "Use $ai-compounding-system. Start the first-time setup wizard if this workspace has not been configured; otherwise review one specified day of AI work and generate an approval workbench."
