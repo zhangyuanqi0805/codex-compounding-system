@@ -112,6 +112,8 @@ expectAllIncludes("skills/ai-compounding-system/templates/00_全局审批台.tem
   "sidebar",
   "inspector",
   "total-date-card",
+  "flex-wrap: nowrap",
+  "grid-template-columns: minmax(260px, 1fr) max-content max-content",
   "总审批台",
   "审批规则",
   "主动作单选",
